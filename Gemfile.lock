@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/thoughtbot/appraisal.git
+  revision: 4d1ff00538ff14c8efb6dd819f938609d70f09e8
+  branch: nc-install-path
+  specs:
+    appraisal (2.2.0)
+      bundler
+      rake
+      thor (>= 0.14.0)
+
 PATH
   remote: .
   specs:
@@ -48,10 +58,6 @@ GEM
       activesupport (>= 3.0)
       railties (>= 3.0)
       rspec-rails (>= 2.2)
-    appraisal (2.2.0)
-      bundler
-      rake
-      thor (>= 0.14.0)
     ast (2.4.0)
     autoprefixer-rails (9.7.4)
       execjs
@@ -254,7 +260,7 @@ DEPENDENCIES
   administrate!
   administrate-field-image
   ammeter
-  appraisal
+  appraisal!
   autoprefixer-rails
   awesome_print
   bundler-audit
