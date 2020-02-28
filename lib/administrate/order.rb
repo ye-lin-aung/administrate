@@ -52,18 +52,18 @@ module Administrate
     def order_by_association(relation)
       return order_by_count(relation) if has_many_attribute?(relation)
       if belongs_to_attribute?(relation)
-        if attribute.present?
+
           if relation == "user"
+            raise "ORDER"
             return order_by_order_attribute(relation, "email")
           elsif relation == "video"
             return order_by_order_attribute(relation, "title")
           elsif relation == "question_group"
             return order_by_order_attribute(relation, "title")
-          end
 
-        else
-          return order_by_id(relation)
-        end
+          else
+            return order_by_id(relation)
+          end
       end
 
       relation
