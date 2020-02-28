@@ -1,15 +1,18 @@
 module Administrate
   class Order
-    def initialize(attribute = nil, direction = nil)
+    def initialize(attribute = nil, direction = nil, order = nil)
       @attribute = attribute
       @direction = direction || :asc
+
     end
 
     def apply(relation)
+      order = "#{relation.table_name}.#{attribute} #{direction}"
+
       return order_by_association(relation) unless
       reflect_association(relation).nil?
 
-      order = "#{relation.table_name}.#{attribute} #{direction}"
+
 
       return relation.reorder(Arel.sql(order)) if
       relation.columns_hash.keys.include?(attribute.to_s)
@@ -49,9 +52,17 @@ module Administrate
     def order_by_association(relation)
       return order_by_count(relation) if has_many_attribute?(relation)
 
+
       if belongs_to_attribute?(relation)
         if attribute.present?
-          return order_by_order_attribute(relation, attribute)
+          if relation == "user"
+            return order_by_order_attribute(relation, "email")
+          elsif relation == "video"
+            return order_by_order_attribute(relation, "title")
+          elsif relation == "question_group"
+            return order_by_order_attribute(relation, "title")
+          end
+
         else
           return order_by_id(relation)
         end
