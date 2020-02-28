@@ -50,8 +50,8 @@ module Administrate
       return order_by_count(relation) if has_many_attribute?(relation)
 
       if belongs_to_attribute?(relation)
-        if order_attribute.present?
-          return order_by_order_attribute(relation, order_attribute)
+        if attribute.present?
+          return order_by_order_attribute(relation, attribute)
         else
           return order_by_id(relation)
         end
