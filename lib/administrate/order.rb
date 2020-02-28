@@ -51,8 +51,6 @@ module Administrate
 
     def order_by_association(relation)
       return order_by_count(relation) if has_many_attribute?(relation)
-
-
       if belongs_to_attribute?(relation)
         if attribute.present?
           if relation == "user"
