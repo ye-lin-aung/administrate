@@ -56,9 +56,9 @@ module Administrate
         if attribute == "user"
             return order_by_order_attribute(relation, "email")
           elsif attribute == "video"
-            return order_by_order_attribute(relation, "title")
+            return order_by_order_attribute(relation, "videos.title")
           elsif attribute == "question_group"
-            return order_by_order_attribute(relation, "title")
+            return order_by_order_attribute(relation, "question_groups.title")
 
           else
             return order_by_id(relation)
