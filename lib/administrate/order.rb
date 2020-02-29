@@ -53,12 +53,11 @@ module Administrate
       return order_by_count(relation) if has_many_attribute?(relation)
       if belongs_to_attribute?(relation)
 
-          if relation == "user"
-            raise "ORDER"
+        if attribute == "user"
             return order_by_order_attribute(relation, "email")
-          elsif relation == "video"
+          elsif attribute == "video"
             return order_by_order_attribute(relation, "title")
-          elsif relation == "question_group"
+          elsif attribute == "question_group"
             return order_by_order_attribute(relation, "title")
 
           else
@@ -96,12 +95,7 @@ module Administrate
       relation
         .joins(attribute.to_sym)
         .order(
-          attribute
-        .titlecase
-        .constantize
-        .arel_table[order_attribute.to_s]
-        .lower
-        .send(direction.to_sym),
+          "#{order_attribute} #{direction}"
       )
     end
 
