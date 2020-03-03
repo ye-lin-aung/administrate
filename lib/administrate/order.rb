@@ -1,18 +1,21 @@
 module Administrate
   class Order
-    def initialize(attribute = nil, direction = nil)
+    def initialize(attribute = nil, direction = nil, order = nil)
       @attribute = attribute
       @direction = direction || :asc
+
     end
 
     def apply(relation)
-      return order_by_association(relation) unless
-        reflect_association(relation).nil?
-
       order = "#{relation.table_name}.#{attribute} #{direction}"
 
-      return relation.reorder(order) if
-        relation.columns_hash.keys.include?(attribute.to_s)
+      return order_by_association(relation) unless
+      reflect_association(relation).nil?
+
+
+
+      return relation.reorder(Arel.sql(order)) if
+      relation.columns_hash.keys.include?(attribute.to_s)
 
       relation
     end
@@ -48,21 +51,33 @@ module Administrate
 
     def order_by_association(relation)
       return order_by_count(relation) if has_many_attribute?(relation)
-
-      return order_by_id(relation) if belongs_to_attribute?(relation)
+      if belongs_to_attribute?(relation)
+        if attribute.present?
+          if relation == "user"
+            raise "ORDER"
+            return order_by_order_attribute(relation, "email")
+          elsif relation == "video"
+            return order_by_order_attribute(relation, "title")
+          elsif relation == "question_group"
+            return order_by_order_attribute(relation, "title")
+          end
+        else
+          return order_by_id(relation)
+        end
+      end
 
       relation
     end
 
     def order_by_count(relation)
       relation.
-      left_joins(attribute.to_sym).
-      group(:id).
-      reorder("COUNT(#{attribute}.id) #{direction}")
+        left_joins(attribute.to_sym).
+        group(:id).
+        reorder("COUNT(#{attribute}.id) #{direction}")
     end
 
     def order_by_id(relation)
-      relation.reorder("#{attribute}_id #{direction}")
+      relation.reorder("#{foreign_key(relation)} #{direction}")
     end
 
     def has_many_attribute?(relation)
@@ -75,6 +90,23 @@ module Administrate
 
     def reflect_association(relation)
       relation.klass.reflect_on_association(attribute.to_s)
+    end
+
+    def order_by_order_attribute(relation, order_attribute)
+      relation
+        .joins(attribute.to_sym)
+        .order(
+          attribute
+        .titlecase
+        .constantize
+        .arel_table[order_attribute.to_s]
+        .lower
+        .send(direction.to_sym),
+      )
+    end
+
+    def foreign_key(relation)
+      reflect_association(relation).foreign_key
     end
   end
 end
