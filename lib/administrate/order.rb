@@ -54,7 +54,6 @@ module Administrate
       if belongs_to_attribute?(relation)
         if attribute.present?
           if relation == "user"
-            raise "ORDER"
             return order_by_order_attribute(relation, "email")
           elsif relation == "video"
             return order_by_order_attribute(relation, "title")
